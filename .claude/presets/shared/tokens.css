@@ -1,0 +1,154 @@
+/*
+ * Design tokens. The only place a raw color, size, or duration is allowed to exist.
+ * Components use the semantic layer only. Replace the primitive palette with your brand.
+ *
+ * Copy to src/styles/tokens.css and import it once, before every other stylesheet.
+ */
+
+:root {
+  /* ---------- 1. Primitives: raw values, never used directly in a component ---------- */
+  --neutral-0: #ffffff;
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-500: #737373;
+  --neutral-700: #404040;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
+
+  --accent-400: #60a5fa;
+  --accent-500: #2563eb;
+  --accent-600: #1d4ed8;
+
+  --danger-500: #dc2626;
+  --danger-600: #b91c1c;
+  --success-500: #16a34a;
+  --warning-500: #d97706;
+
+  /* ---------- 2. Semantic: the only layer components may reference ---------- */
+  --color-background: var(--neutral-0);
+  --color-surface: var(--neutral-0);
+  --color-surface-raised: var(--neutral-50);
+  --color-surface-sunken: var(--neutral-100);
+  --color-border: var(--neutral-200);
+  --color-border-strong: var(--neutral-300);
+
+  --color-text: var(--neutral-900);
+  --color-text-muted: var(--neutral-500);
+  --color-text-inverse: var(--neutral-0);
+
+  --color-accent: var(--accent-500);
+  --color-accent-hover: var(--accent-600);
+  --color-on-accent: var(--neutral-0);
+
+  --color-danger: var(--danger-500);
+  --color-danger-hover: var(--danger-600);
+  --color-success: var(--success-500);
+  --color-warning: var(--warning-500);
+
+  --color-focus-ring: var(--accent-500);
+
+  /* ---------- Spacing: 4px scale, nothing off-scale ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* ---------- Typography ---------- */
+  --font-family-interface: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-family-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.5rem;
+  --font-size-display: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* ---------- Radius, elevation, motion ---------- */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-md: 0 1px 3px rgb(0 0 0 / 0.08), 0 4px 12px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 2px 6px rgb(0 0 0 / 0.08), 0 12px 32px rgb(0 0 0 / 0.08);
+
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---------- Layout ---------- */
+  --touch-target-minimum: 2.75rem; /* 44px */
+  --content-width-prose: 65ch;
+  --content-width-page: 80rem;
+
+  /* min-width breakpoints only; max-width is blocked by the pre-edit hook */
+  --breakpoint-sm: 30rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+}
+
+/* Dark theme is a remap of the semantic layer. Never a per-component override. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-background: var(--neutral-950);
+    --color-surface: var(--neutral-900);
+    --color-surface-raised: #262626;
+    --color-surface-sunken: var(--neutral-950);
+    --color-border: #333333;
+    --color-border-strong: #4d4d4d;
+
+    --color-text: var(--neutral-50);
+    --color-text-muted: #a3a3a3;
+    --color-text-inverse: var(--neutral-900);
+
+    --color-accent: var(--accent-400);
+    --color-accent-hover: var(--accent-500);
+    --color-on-accent: var(--neutral-950);
+  }
+}
+
+/* Explicit user choice wins over the system preference, in both directions. */
+:root[data-theme="dark"] {
+  --color-background: var(--neutral-950);
+  --color-surface: var(--neutral-900);
+  --color-surface-raised: #262626;
+  --color-surface-sunken: var(--neutral-950);
+  --color-border: #333333;
+  --color-border-strong: #4d4d4d;
+  --color-text: var(--neutral-50);
+  --color-text-muted: #a3a3a3;
+  --color-text-inverse: var(--neutral-900);
+  --color-accent: var(--accent-400);
+  --color-accent-hover: var(--accent-500);
+  --color-on-accent: var(--neutral-950);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

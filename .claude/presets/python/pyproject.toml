@@ -1,0 +1,152 @@
+# Python tooling that enforces the engineering standard.
+# Merge the [tool.*] sections into your project's pyproject.toml.
+#
+# Install: uv add --dev ruff mypy pytest pytest-cov pytest-asyncio httpx testcontainers
+#
+# ruff replaces black, isort, flake8, bandit, pyupgrade, and most plugins in one tool.
+
+[project]
+name = "change-me"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+# Formatting and linting
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+exclude = [".venv", "build", "dist", "migrations/versions"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    "E", "W",      # pycodestyle
+    "F",           # pyflakes
+    "I",           # import sorting
+    "N",           # pep8-naming
+    "UP",          # pyupgrade
+    "ANN",         # missing type annotations
+    "S",           # bandit security checks
+    "B",           # bugbear
+    "A",           # builtin shadowing
+    "C4",          # comprehensions
+    "DTZ",         # naive datetime usage
+    "T20",         # print / pprint left in source
+    "PT",          # pytest style
+    "Q",           # quotes
+    "RET",         # return simplification
+    "SIM",         # simplification, catches collapsible if/else
+    "TID",         # tidy imports, enforces layering
+    "ARG",         # unused arguments
+    "PTH",         # use pathlib
+    "ERA",         # commented-out code
+    "PL",          # pylint rules including complexity
+    "TRY",         # exception antipatterns
+    "RUF",         # ruff-specific
+    "ASYNC",       # async antipatterns
+    "C90",         # mccabe complexity
+    "LOG", "G",    # logging correctness, no f-string in a log call
+]
+
+ignore = [
+    "ANN401",  # dynamic Any - already banned outright by the pre-edit hook
+    "TRY003",  # long message in a raise - our ApplicationError carries one by design
+]
+
+# No blanket per-file suppressions. Tests get exactly two relaxations and no more.
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "S101",     # assert is the point of a test
+    "PLR2004",  # a literal in an expectation is clearer than a named constant
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 8
+
+[tool.ruff.lint.pylint]
+max-args = 3
+max-branches = 8
+max-returns = 6
+max-statements = 30
+
+[tool.ruff.lint.pep8-naming]
+# No abbreviations. Full words in every identifier.
+classmethod-decorators = ["classmethod", "pydantic.validator", "pydantic.field_validator"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+# Layering: dependencies point downward only.
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"fastapi.Request".msg = "A service must not know about HTTP. Keep Request in the router layer."
+"fastapi.Response".msg = "A service must not know about HTTP. Keep Response in the router layer."
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["pydantic.BaseModel"]
+
+# Type checking
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+warn_no_return = true
+warn_return_any = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_explicit = true       # typing.Any is banned by the standard
+disallow_any_generics = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+strict_equality = true
+extra_checks = true
+show_error_codes = true
+pretty = true
+plugins = ["pydantic.mypy"]
+exclude = ["^\\.venv/", "^build/", "^migrations/versions/"]
+
+# Suppressing an error per-module is not allowed. If a third-party package ships no types,
+# write a stub in stubs/ rather than silencing the whole module.
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_any_explicit = false
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+# Tests and coverage
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "-ra",
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-fail-under=80",
+]
+filterwarnings = ["error"]  # a warning in a test is a defect, not noise
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+omit = ["*/migrations/*", "*/__main__.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 80
+# No exclude_lines. "# pragma: no cover" is blocked by the pre-edit hook: untestable code
+# is a design problem, not a coverage-configuration problem.
+exclude_lines = ["if TYPE_CHECKING:", "@overload", "\\.\\.\\."]

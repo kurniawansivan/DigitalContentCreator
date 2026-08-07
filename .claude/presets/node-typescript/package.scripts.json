@@ -1,0 +1,31 @@
+{
+  "_comment": "Merge these into package.json. The Stop hook looks for lint, typecheck, and test.",
+
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:unit": "vitest run --coverage",
+    "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "playwright test",
+    "audit:security": "npm audit --audit-level=high",
+    "audit:secrets": "gitleaks detect --no-banner --redact",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run audit:security",
+    "prepare": "husky"
+  },
+
+  "_husky": {
+    "note": "Create .husky/pre-commit containing: npx lint-staged",
+    "note2": "Create .husky/pre-push containing: npm run verify"
+  },
+
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": ["prettier --write", "eslint --fix --max-warnings 0"],
+    "*.{json,css,scss,md,yml,yaml}": ["prettier --write"],
+    "*.py": ["ruff format", "ruff check --fix"]
+  }
+}
