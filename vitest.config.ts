@@ -55,15 +55,23 @@ export default defineConfig({
         "src/generated/**",
         "src/test/**",
         "src/worker.ts",
-        "src/app/**",
-        // Repositories and controllers are proven by integration tests (real DB/HTTP),
-        // not unit tests - see testing-standard's test-level table. Queue/worker-factory
-        // and other pure wiring files are exercised by integration tests or by hand for
-        // the same reason `src/main.ts`-style entrypoints normally are.
+        // Route handlers and layout are pure wiring/config, proven by integration tests
+        // instead - unlike page.tsx (has its own logic, unit-tested directly) and
+        // loading.tsx, neither is blanket-excluded.
+        "src/app/**/route.ts",
+        "src/app/layout.tsx",
+        // Repositories are proven by integration tests (real DB/HTTP), not unit tests -
+        // see testing-standard's test-level table. Controllers moved out of this list
+        // once health.controller.ts grew real per-dependency error-building logic worth
+        // unit-testing directly (health.controller.test.ts) - a controller that stays
+        // pure wiring can go back in. Queue/worker-factory and other pure wiring files
+        // are exercised by integration tests or by hand for the same reason
+        // `src/main.ts`-style entrypoints normally are.
         "src/modules/*/*.repository.ts",
-        "src/modules/*/*.controller.ts",
         "src/modules/*/*.queue.ts",
         "src/modules/*/*.worker.ts",
+        "src/modules/*/*.factory.ts",
+        "src/modules/*/*.redisConnectionChecker.ts",
         "src/shared/database/**",
         "src/shared/queue/**",
         "src/shared/logging/**",

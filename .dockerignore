@@ -9,3 +9,10 @@ src/generated
 .env
 .env.local
 *.log
+
+# Tests never run inside the image; keep them (and their fixtures) out of it.
+**/*.test.ts
+**/*.test.tsx
+**/*.integration.test.ts
+src/test
+e2e

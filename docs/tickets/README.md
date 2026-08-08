@@ -8,7 +8,7 @@ Order below is dependency order (build top to bottom), not PRD section order.
 
 | ID | Title | Requirement area | Depends on | Status |
 | --- | --- | --- | --- | --- |
-| [MOMENTA-0001](./MOMENTA-0001-scaffold-monolith.md) | Scaffold the monolith (Next.js + PostgreSQL + Docker) | Foundation | - | Ready |
+| [MOMENTA-0001](./MOMENTA-0001-scaffold-monolith.md) | Scaffold the monolith (Next.js + PostgreSQL + Docker) | Foundation | - | Done |
 | [MOMENTA-0002](./MOMENTA-0002-user-accounts.md) | User accounts (register, login, session) | Foundation | 0001 | Proposed |
 | [MOMENTA-0003](./MOMENTA-0003-moment-calendar-engine.md) | Moment & Calendar Engine | [01](../requirements/01-moment-calendar-engine.md) | 0001 | Proposed |
 | [MOMENTA-0004](./MOMENTA-0004-brand-kit.md) | Brand Kit & Style Customization | [04](../requirements/04-brand-kit.md) | 0002 | Proposed |

@@ -3,7 +3,10 @@
 // with DATABASE_URL / REDIS_URL pointed at them.
 
 import { fileURLToPath } from "node:url";
+import { config as loadDotEnv } from "dotenv";
 import { defineConfig } from "vitest/config";
+
+loadDotEnv();
 
 export default defineConfig({
   resolve: {

@@ -11,7 +11,7 @@ datasource db {
 /// Written once per successful database health check (see health.repository.ts).
 model SystemHealthCheck {
   id        String   @id @default(cuid())
-  checkedAt DateTime @default(now()) @map("checked_at")
+  checkedAt DateTime @default(now()) @map("checked_at") @db.Timestamptz()
 
   @@map("system_health_checks")
 }

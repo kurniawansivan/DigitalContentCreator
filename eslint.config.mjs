@@ -22,6 +22,7 @@ import unusedImports from "eslint-plugin-unused-imports";
 import eslintComments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import testingLibrary from "eslint-plugin-testing-library";
 import jsonPlugin from "@eslint/json";
+import cssPlugin from "@eslint/css";
 import prettierConfig from "eslint-config-prettier";
 
 export default defineConfig([
@@ -171,6 +172,9 @@ export default defineConfig([
         // API payload keys and generated types are exempt: they follow the wire contract.
         { selector: "objectLiteralProperty", format: null },
         { selector: "typeProperty", format: null },
+        // A default-imported class (e.g. AxeBuilder) keeps the PascalCase name it is
+        // exported under - renaming it to camelCase would be more confusing, not less.
+        { selector: "import", format: ["camelCase", "PascalCase"] },
       ],
 
       // --- Correctness ---------------------------------------------------------------------
@@ -262,6 +266,13 @@ export default defineConfig([
       "react/jsx-no-script-url": "error",
 
       "max-lines-per-function": ["error", { max: 120, skipBlankLines: true, skipComments: true }],
+      // Component files are named after the component they export (PascalCase), the
+      // universal React convention - not a departure from "no abbreviations", just a
+      // different casing for a different kind of identifier.
+      "unicorn/filename-case": [
+        "error",
+        { cases: { kebabCase: true, camelCase: true, pascalCase: true } },
+      ],
     },
   },
 
@@ -285,6 +296,14 @@ export default defineConfig([
       "sonarjs/no-duplicate-string": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",
     },
+  },
+  // A controller's own test imports that controller - the layering rule exists to stop
+  // *other* application code reaching over the service layer, not to stop the one file
+  // whose entire job is exercising the controller directly. Scoped to `*.controller.test.ts`
+  // only, so a service test importing a controller by mistake is still caught.
+  {
+    files: ["src/modules/*/*.controller.test.ts"],
+    rules: { "import/no-restricted-paths": "off" },
   },
   {
     files: ["**/*.test.{tsx,ts}"],
@@ -319,6 +338,9 @@ export default defineConfig([
     rules: {
       "no-console": "off",
       "no-magic-numbers": "off",
+      // A lint config is one long declarative rule list, not "one function doing too
+      // much" - the thing max-lines exists to catch.
+      "max-lines": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-unsafe-call": "off",
@@ -335,6 +357,27 @@ export default defineConfig([
     language: "json/json",
     rules: {
       ...jsonPlugin.configs.recommended.rules,
+    },
+  },
+
+  // CSS: Prettier formats it, this just catches structural mistakes (invalid
+  // properties, empty rule blocks, duplicate `@import`s).
+  {
+    files: ["**/*.css"],
+    plugins: { css: cssPlugin },
+    language: "css/css",
+    rules: {
+      ...cssPlugin.configs.recommended.rules,
+      // The prefers-reduced-motion override in src/styles/tokens.css must always win
+      // over a component's own animation/transition declarations, at any specificity -
+      // that is what !important is for here, not a shortcut around the cascade.
+      "css/no-important": "off",
+      // Design tokens are declared once in tokens.css and consumed via var(...) from
+      // every other stylesheet through a plain CSS @import - this plugin lints one
+      // file at a time and cannot see across that import, so it cannot know a
+      // token like --color-background is real. Real typos still get caught: an
+      // *unused* custom property is a separate, still-enabled rule.
+      "css/no-invalid-properties": ["error", { allowUnknownVariables: true }],
     },
   },
 

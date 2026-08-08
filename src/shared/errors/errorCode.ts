@@ -15,7 +15,7 @@ export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
 const HTTP_STATUS_UNPROCESSABLE_ENTITY = 422;
 const HTTP_STATUS_UNAUTHORIZED = 401;
 const HTTP_STATUS_NOT_FOUND = 404;
-const HTTP_STATUS_SERVICE_UNAVAILABLE = 503;
+export const HTTP_STATUS_SERVICE_UNAVAILABLE = 503;
 export const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
 /**
