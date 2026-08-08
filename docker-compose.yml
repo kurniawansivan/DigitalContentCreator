@@ -1,0 +1,86 @@
+services:
+  web:
+    build: .
+    command: ["npm", "run", "start"]
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      DATABASE_URL: "postgresql://momenta:momenta@postgres:5432/momenta?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      S3_ENDPOINT: "http://minio:9000"
+      S3_BUCKET: "momenta-media"
+      S3_ACCESS_KEY: "momenta"
+      S3_SECRET_KEY: "momenta-secret"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  worker:
+    build: .
+    command: ["npm", "run", "worker"]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://momenta:momenta@postgres:5432/momenta?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      S3_ENDPOINT: "http://minio:9000"
+      S3_BUCKET: "momenta-media"
+      S3_ACCESS_KEY: "momenta"
+      S3_SECRET_KEY: "momenta-secret"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: momenta
+      POSTGRES_USER: momenta
+      POSTGRES_PASSWORD: momenta
+    ports:
+      - "5432:5432"
+    volumes:
+      - momenta-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U momenta -d momenta"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: momenta
+      MINIO_ROOT_PASSWORD: momenta-secret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - momenta-minio-data:/data
+
+volumes:
+  momenta-postgres-data:
+  momenta-minio-data:

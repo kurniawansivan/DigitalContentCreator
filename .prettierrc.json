@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "quoteProps": "as-needed",
+  "jsxSingleQuote": false,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "singleAttributePerLine": false,
+  "overrides": [
+    { "files": ["*.md", "*.mdx"], "options": { "printWidth": 90, "proseWrap": "always" } },
+    { "files": ["*.yml", "*.yaml"], "options": { "singleQuote": false } }
+  ]
+}

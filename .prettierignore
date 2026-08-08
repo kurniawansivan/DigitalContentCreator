@@ -1,0 +1,6 @@
+# Reference/config material that predates this ticket and isn't application code -
+# not this ticket's concern to reformat.
+.claude/
+docs/
+CLAUDE.md
+PRD.md

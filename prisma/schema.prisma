@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Proves the migration -> repository -> Prisma -> Postgres pipeline is live.
+/// Written once per successful database health check (see health.repository.ts).
+model SystemHealthCheck {
+  id        String   @id @default(cuid())
+  checkedAt DateTime @default(now()) @map("checked_at")
+
+  @@map("system_health_checks")
+}
