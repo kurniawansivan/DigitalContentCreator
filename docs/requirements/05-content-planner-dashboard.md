@@ -25,4 +25,5 @@ month" action and a per-date preview/reroll/download flow.
 
 ## Related tickets
 
-- (none yet)
+- [MOMENTA-0007](../tickets/MOMENTA-0007-content-planner-dashboard.md)
+- [MOMENTA-0008](../tickets/MOMENTA-0008-reminder-notification.md)

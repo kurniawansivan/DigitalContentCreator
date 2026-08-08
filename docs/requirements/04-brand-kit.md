@@ -24,4 +24,4 @@ new user is never looking at a blank state.
 
 ## Related tickets
 
-- (none yet)
+- [MOMENTA-0004](../tickets/MOMENTA-0004-brand-kit.md)

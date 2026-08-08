@@ -30,4 +30,4 @@ that does not depend on a live third-party API at runtime.
 
 ## Related tickets
 
-- (none yet)
+- [MOMENTA-0003](../tickets/MOMENTA-0003-moment-calendar-engine.md)

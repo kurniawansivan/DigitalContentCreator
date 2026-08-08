@@ -39,4 +39,4 @@ HTTP request.
 
 ## Related tickets
 
-- (none yet)
+- [MOMENTA-0006](../tickets/MOMENTA-0006-reelkit-video-assembly.md)

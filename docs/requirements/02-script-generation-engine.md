@@ -27,4 +27,4 @@ the video-assembly step.
 
 ## Related tickets
 
-- (none yet)
+- [MOMENTA-0005](../tickets/MOMENTA-0005-script-generation-engine.md)
