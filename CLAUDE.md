@@ -52,6 +52,28 @@ the file does it" is a reason to raise a cleanup ticket, never a reason to add o
 Load the `legacy-adoption` skill before the first change in any codebase that already has
 code in it.
 
+## Where work is tracked
+
+Every ticket, requirement, and its acceptance criteria live in `docs/`, not only in chat
+history. `docs/requirements/` restates each PRD.md functional area in engineering-ready
+terms; `docs/tickets/` holds one file per unit of work, following the four phases in the
+`ticket-workflow` skill (scope, contract, test plan, then implementation notes).
+
+Before starting any unit of work, in this order:
+
+1. Read the ticket file in `docs/tickets/` for the work requested. If it does not exist
+   yet, create it there first (copy `docs/tickets/TEMPLATE.md`) instead of only describing
+   it in chat.
+2. Read the current codebase relevant to that ticket - check what actually exists on disk,
+   do not assume from memory, from the PRD, or from the ticket file alone.
+3. State a short implementation plan for the ticket as a whole - the order of files and
+   layers you will touch, and which existing tools/scaffolding you will use rather than
+   hand-roll - before writing any code, and get it confirmed.
+
+A ticket is not done until every acceptance criterion checked off in its `docs/tickets/`
+file. Update the ticket file itself when scope changes mid-implementation, so it stays the
+record of what was actually decided, not only what was originally proposed.
+
 ## Load the standard before writing code
 
 Do not write code in these areas from memory. Load the skill first.
